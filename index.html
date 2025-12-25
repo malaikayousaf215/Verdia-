@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Verdia — Proof That We Still Care</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+
+<style>
+/* ======================================================
+   CORE THEME
+====================================================== */
+:root{
+  --bg:#f4f7f5;
+  --panel:#ffffff;
+  --accent:#3ddc84;
+  --accent-dark:#1ea362;
+  --text:#0f172a;
+  --muted:#64748b;
+  --radius:22px;
+  --shadow:0 30px 80px rgba(0,0,0,.08);
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Inter,system-ui,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at top right,#dff7ea,transparent 60%),
+    radial-gradient(circle at bottom left,#eef2ff,transparent 60%),
+    var(--bg);
+}
+
+/* ======================================================
+   HEADER
+====================================================== */
+header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  display:flex;
+  align-items:center;
+  gap:18px;
+  padding:16px 30px;
+  background:rgba(255,255,255,.85);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid #e5e7eb;
+}
+
+.logo{
+  font-family:"Press Start 2P";
+  font-size:13px;
+  color:var(--accent-dark);
+}
+
+.tagline{
+  color:var(--muted);
+  font-size:14px;
+}
+
+/* ======================================================
+   LAYOUT
+====================================================== */
+main{
+  max-width:1800px;
+  margin:auto;
+  padding:30px;
+  display:grid;
+  grid-template-columns:320px 1fr 340px;
+  gap:30px;
+}
+
+/* ======================================================
+   PANELS
+====================================================== */
+.panel{
+  background:var(--panel);
+  border-radius:var(--radius);
+  padding:22px;
+  box-shadow:var(--shadow);
+  animation:rise .6s ease;
+}
+
+@keyframes rise{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:none}
+}
+
+.panel h3{
+  margin:0 0 12px;
+  font-weight:900;
+}
+
+/* ======================================================
+   INPUTS
+====================================================== */
+input, textarea, select{
+  width:100%;
+  padding:12px 14px;
+  border-radius:14px;
+  border:1px solid #d1d5db;
+  font-family:inherit;
+}
+
+textarea{resize:none}
+
+button{
+  background:linear-gradient(135deg,var(--accent),var(--accent-dark));
+  color:white;
+  border:none;
+  padding:12px 18px;
+  border-radius:999px;
+  font-weight:800;
+  cursor:pointer;
+  box-shadow:0 15px 40px rgba(61,220,132,.4);
+}
+
+button:hover{transform:translateY(-1px)}
+
+/* ======================================================
+   AVATAR
+====================================================== */
+#avatarCanvas{
+  width:220px;
+  height:340px;
+  border-radius:20px;
+  background:linear-gradient(180deg,#e2e8f0,#f8fafc);
+  display:block;
+  margin:16px auto;
+}
+
+.avatar-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+/* ======================================================
+   FEED
+====================================================== */
+.feed-tabs{
+  display:flex;
+  gap:10px;
+  margin-bottom:14px;
+}
+
+.feed-tab{
+  padding:6px 16px;
+  border-radius:999px;
+  background:#f1f5f9;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.feed-tab.active{
+  background:var(--accent);
+  color:white;
+}
+
+.post{
+  background:linear-gradient(135deg,#e9f7ec,#f0fdf4);
+  border-radius:20px;
+  padding:18px;
+  margin-top:18px;
+}
+
+.post img{
+  width:100%;
+  border-radius:14px;
+  margin-top:12px;
+}
+
+/* ======================================================
+   INTERESTS
+====================================================== */
+.tag{
+  display:inline-block;
+  background:#e0f2fe;
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:13px;
+  margin:4px 4px 0 0;
+}
+
+/* ======================================================
+   PET
+====================================================== */
+.pet{
+  font-size:64px;
+  text-align:center;
+  cursor:pointer;
+}
+
+/* ======================================================
+   TOAST
+====================================================== */
+.toast{
+  position:fixed;
+  bottom:24px;
+  right:24px;
+  background:#020617;
+  color:white;
+  padding:14px 20px;
+  border-radius:16px;
+  opacity:0;
+  transform:translateY(12px);
+  transition:.3s;
+}
+
+.toast.show{opacity:1;transform:none}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">VERDIA</div>
+  <div class="tagline">Proof that we still care.</div>
+</header>
+
+<main>
+
+<!-- LEFT -->
+<div>
+  <div class="panel">
+    <h3>Sign In</h3>
+    <input id="nameInput" placeholder="Your first name">
+    <button onclick="saveName()">Enter</button>
+    <p id="nameDisplay"></p>
+  </div>
+
+  <div class="panel">
+    <h3>Your Avatar</h3>
+    <canvas id="avatarCanvas" width="220" height="340"></canvas>
+
+    <div class="avatar-grid">
+      <select id="skin" onchange="drawAvatar()">
+        <option value="#f1c27d">Light</option>
+        <option value="#d2a679">Tan</option>
+        <option value="#a16c4a">Brown</option>
+        <option value="#5c3a21">Dark</option>
+      </select>
+
+      <select id="hairStyle" onchange="drawAvatar()">
+        <option value="short">Short</option>
+        <option value="curly">Curly</option>
+        <option value="long">Long</option>
+      </select>
+
+      <select id="hairColor" onchange="drawAvatar()">
+        <option value="#3b2f2f">Brown</option>
+        <option value="#111827">Black</option>
+        <option value="#facc15">Blonde</option>
+      </select>
+
+      <select id="outfit" onchange="drawAvatar()">
+        <option value="#22c55e">Green Outfit</option>
+        <option value="#3b82f6">Blue Outfit</option>
+        <option value="#ec4899">Pink Outfit</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Eco Pet</h3>
+    <div class="pet" onclick="toast('Your pet grew stronger 🌱')">🦊</div>
+  </div>
+</div>
+
+<!-- CENTER -->
+<div>
+  <div class="panel">
+    <div class="feed-tabs">
+      <div class="feed-tab active">Community</div>
+      <div class="feed-tab">Local</div>
+      <div class="feed-tab">Photos</div>
+    </div>
+
+    <textarea id="postText" placeholder="Show proof you helped nature today…"></textarea>
+    <input type="file" id="postImage" accept="image/*">
+    <button onclick="post()">Post</button>
+
+    <div id="feed"></div>
+  </div>
+</div>
+
+<!-- RIGHT -->
+<div>
+  <div class="panel">
+    <h3>Your Interests</h3>
+    <input id="interestInput" placeholder="Type interest and press Enter">
+    <div id="interests"></div>
+  </div>
+
+  <div class="panel">
+    <h3>Daily Streak</h3>
+    <p id="streak">0 days caring</p>
+    <button onclick="addStreak()">Continue</button>
+  </div>
+</div>
+
+</main>
+
+<div id="toast" class="toast"></div>
+
+<script>
+let username="",days=0;
+
+function saveName(){
+  username=nameInput.value.trim();
+  if(username) nameDisplay.textContent="Welcome, "+username;
+}
+
+/* REALISTIC AVATAR (LAYERED DRAWING) */
+function drawAvatar(){
+  const c=avatarCanvas,ctx=c.getContext("2d");
+  ctx.clearRect(0,0,c.width,c.height);
+
+  // Body
+  ctx.fillStyle=outfit.value;
+  ctx.fillRect(85,170,50,120);
+
+  // Neck
+  ctx.fillStyle=skin.value;
+  ctx.fillRect(105,145,10,30);
+
+  // Head
+  ctx.beginPath();
+  ctx.arc(110,105,40,0,Math.PI*2);
+  ctx.fill();
+
+  // Eyes
+  ctx.fillStyle="#000";
+  ctx.beginPath();
+  ctx.arc(95,105,4,0,Math.PI*2);
+  ctx.arc(125,105,4,0,Math.PI*2);
+  ctx.fill();
+
+  // Mouth
+  ctx.strokeStyle="#000";
+  ctx.beginPath();
+  ctx.arc(110,120,10,0,Math.PI);
+  ctx.stroke();
+
+  // Hair
+  ctx.fillStyle=hairColor.value;
+  if(hairStyle.value==="short"){
+    ctx.fillRect(70,60,80,30);
+  }
+  if(hairStyle.value==="curly"){
+    for(let i=0;i<6;i++){
+      ctx.beginPath();
+      ctx.arc(80+i*10,65,8,0,Math.PI*2);
+      ctx.fill();
+    }
+  }
+  if(hairStyle.value==="long"){
+    ctx.fillRect(70,60,80,40);
+    ctx.fillRect(70,90,20,40);
+    ctx.fillRect(130,90,20,40);
+  }
+}
+drawAvatar();
+
+/* FEED */
+function post(){
+  if(!postText.value) return;
+  const p=document.createElement("div");
+  p.className="post";
+  p.innerHTML="<strong>"+(username||"Anonymous")+"</strong><br>"+postText.value;
+  if(postImage.files[0]){
+    const img=document.createElement("img");
+    img.src=URL.createObjectURL(postImage.files[0]);
+    p.appendChild(img);
+  }
+  feed.prepend(p);
+  postText.value="";
+  postImage.value="";
+}
+
+/* INTERESTS */
+interestInput.addEventListener("keypress",e=>{
+  if(e.key==="Enter" && interestInput.value){
+    const t=document.createElement("span");
+    t.className="tag";
+    t.textContent="#"+interestInput.value;
+    interests.appendChild(t);
+    interestInput.value="";
+  }
+});
+
+/* STREAK */
+function addStreak(){
+  days++;
+  streak.textContent=days+" days caring";
+  toast("Streak increased 🌿");
+}
+
+/* TOAST */
+function toast(msg){
+  toastBox.textContent=msg;
+  toastBox.classList.add("show");
+  setTimeout(()=>toastBox.classList.remove("show"),2500);
+}
+const toastBox=document.getElementById("toast");
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
